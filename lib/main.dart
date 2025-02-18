@@ -17,28 +17,32 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        appBar: AppBar(title: 
+          Text(
+            'Weather',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.start,
+          ),
+        ),
         body: Container(
           padding: EdgeInsets.only(top: 35, right: 15, bottom: 35, left: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Weather',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-                textAlign: TextAlign.start,
-              ),
-              SizedBox(height: 12),
               WeatherCard(weatherData: locations.first),
-              SizedBox(height: 12),
+              SizedBox(height: 18),
               Text(
                 'Around the world',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500
+                ),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: 14),
               for (var location in locations)
                 if (!location.isSelected)
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.only(bottom: 14),
                     child: WeatherCard(weatherData: location),
                   ),
             ],
