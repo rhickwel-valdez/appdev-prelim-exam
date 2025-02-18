@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
         body: Container(
           padding: EdgeInsets.only(top: 35, right: 15, bottom: 35, left: 15),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Weather',
@@ -27,7 +28,24 @@ class MyApp extends StatelessWidget {
                 textAlign: TextAlign.start,
               ),
               SizedBox(height: 12),
-              Card(weatherData: locations.first) // change
+              WeatherCard(weatherData: locations.first),
+              SizedBox(height: 12),
+              Text(
+                'Around the world',
+                style: TextStyle(fontSize: 14),
+              ),
+              SizedBox(height: 12),
+              for (var location in locations)
+                if (!location.isSelected)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: GestureDetector(
+                      onTap: () {
+                        // Handle tap and set the tapped location as selected
+                      },
+                      child: WeatherCard(weatherData: location),
+                    ),
+                  ),
             ],
           ),
         ),
@@ -37,16 +55,16 @@ class MyApp extends StatelessWidget {
 }
 
 // ignore: must_be_immutable
-class Card extends StatefulWidget {
-  Card({super.key, this.weatherData});
+class WeatherCard extends StatefulWidget {
+  WeatherCard({super.key, this.weatherData});
 
   WeatherData? weatherData;
 
   @override
-  State<Card> createState() => _CardState();
+  State<WeatherCard> createState() => _WeatherCardState();
 }
 
-class _CardState extends State<Card> {
+class _WeatherCardState extends State<WeatherCard> {
   String getImage(String weather) {
     late String imgPath;
 
@@ -68,46 +86,71 @@ class _CardState extends State<Card> {
     return imgPath;
   }
 
+  Text displayText(String text, double fs, FontWeight fw, TextAlign alignText) {
+    return Text(
+      text,
+      style: TextStyle(fontSize: fs, fontWeight: fw, color: Color(0xFFFFFFFF)),
+      textAlign: alignText,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Column(
-                children: [
-                  Text(widget.weatherData!._country),
-                  Text(widget.weatherData!._city),
-                ],
-              ),
-              Image.asset(getImage(widget.weatherData!._weather))
-            ],
-          ),
-          Row(
-            children: [
-                Text(widget.weatherData!.weather),
-                Text('${widget.weatherData!.temperature}C')
-            ],
-          )
-        ],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30),
+      child: Container(
+        padding: EdgeInsets.all(15),
+        color: Color(0xFF6051c3),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    displayText(widget.weatherData!.country, 14,
+                        FontWeight.normal, TextAlign.start),
+                    displayText(widget.weatherData!.city, 22, FontWeight.w500,
+                        TextAlign.start),
+                  ],
+                ),
+                Image.asset(getImage(widget.weatherData!._weather))
+              ],
+            ),
+            SizedBox(height: 14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  widget.weatherData!.weather,
+                  style: TextStyle(color: Color(0xFFFFFFFF)),
+                ),
+                Text(
+                  '${widget.weatherData!.temperature}C',
+                  style: TextStyle(color: Color(0xFFFFFFFF)),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
 class WeatherData {
-  late final int _locationId;
-  late final String _country;
-  late final String _city;
-  late final String _weather;
-  late final int _temperature;
-  late final bool _isSelected;
+  final int _locationId;
+  final String _country;
+  final String _city;
+  final String _weather;
+  final int _temperature;
+  final bool _isSelected;
 
   WeatherData(this._locationId, this._country, this._city, this._weather,
       this._temperature, this._isSelected);
-
-  // getters
 
   int get locationId => _locationId;
   String get country => _country;
