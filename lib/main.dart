@@ -39,12 +39,7 @@ class MyApp extends StatelessWidget {
                 if (!location.isSelected)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: GestureDetector(
-                      onTap: () {
-                        // Handle tap and set the tapped location as selected
-                      },
-                      child: WeatherCard(weatherData: location),
-                    ),
+                    child: WeatherCard(weatherData: location),
                   ),
             ],
           ),
@@ -116,7 +111,7 @@ class _WeatherCardState extends State<WeatherCard> {
                         TextAlign.start),
                   ],
                 ),
-                Image.asset(getImage(widget.weatherData!._weather))
+                Image.asset(getImage(widget.weatherData!.weather))
               ],
             ),
             SizedBox(height: 14),
@@ -147,7 +142,7 @@ class WeatherData {
   final String _city;
   final String _weather;
   final int _temperature;
-  final bool _isSelected;
+  bool _isSelected;
 
   WeatherData(this._locationId, this._country, this._city, this._weather,
       this._temperature, this._isSelected);
@@ -158,4 +153,8 @@ class WeatherData {
   String get weather => _weather;
   int get temperature => _temperature;
   bool get isSelected => _isSelected;
+
+  set isSelected(bool value) {
+    _isSelected = value;
+  }
 }
